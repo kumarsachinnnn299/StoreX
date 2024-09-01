@@ -36,19 +36,19 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public void createCategory(Category category) {
-        Category savedCategory=categoryRepository.findByCategoryName(category.getCategoryName());
-        if(savedCategory!=null)
+    public CategoryDTO createCategory(CategoryDTO categoryDTO) {
+        Category category=modelMapper.map(categoryDTO,Category.class);
+        Category categoryToSave=categoryRepository.findByCategoryName(category.getCategoryName());
+        if(categoryToSave!=null)
             throw new APIException("Category with the name: "+ category.getCategoryName()+" already exist!!");
-        categoryRepository.save(category);
+        Category savedCategory=categoryRepository.save(category);
+        return modelMapper.map(savedCategory,CategoryDTO.class);
     }
 
     @Override
-    public String deleteCategory(Long categoryId) {
+    public CategoryDTO deleteCategory(Long categoryId) {
         Category category=categoryRepository.findById(categoryId)
                 .orElseThrow(()-> new ResourceNotFoundException("Category","categoryId",categoryId));
-
-
 
 //        List<Category>categories=categoryRepository.findAll();
 //        Category category=categories.stream()
@@ -58,21 +58,22 @@ public class CategoryServiceImpl implements CategoryService{
 
 //        if(category==null)return "Category not found!!";   -> This will not be required as we have used orElseThrow in above line
         categoryRepository.delete(category);
-        return "Category with Category ID: "+categoryId+" is deleted successfully!!";
+        return modelMapper.map(category,CategoryDTO.class);
     }
 
     @Override
-    public Category updateCategory(Category category, Long categoryId) {
+    public CategoryDTO updateCategory(CategoryDTO categoryDTO, Long categoryId) {
 //        List<Category>categories=categoryRepository.findAll();  -> Don't need to get all categories
 
         //just get the required category that needs to be updated
-        Optional<Category> savedCategoryOptional=categoryRepository.findById(categoryId);
-        Category savedCategory=savedCategoryOptional
+        Optional<Category> categoryToSaveOptional=categoryRepository.findById(categoryId);
+        Category categoryToSave=categoryToSaveOptional
                 .orElseThrow(()-> new ResourceNotFoundException("Category","categoryId",categoryId));
 
+        Category category=modelMapper.map(categoryDTO,Category.class);
         category.setCategoryId(categoryId);
-        savedCategory=categoryRepository.save(category);
-        return savedCategory;
+        Category savedCategory=categoryRepository.save(category);
+        return modelMapper.map(savedCategory,CategoryDTO.class);
         //The commented cade was used initially but yhe non commented code is more optimised
 //        Optional<Category> optionalCategory=categories.stream()
 //                .filter(c->c.getCategoryId().equals(categoryId))

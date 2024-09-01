@@ -2,6 +2,7 @@ package com.ecommerce.project.controllers;
 
 
 import com.ecommerce.project.model.Category;
+import com.ecommerce.project.model.payload.CategoryDTO;
 import com.ecommerce.project.model.payload.CategoryResponse;
 import com.ecommerce.project.service.CategoryService;
 import jakarta.validation.Valid;
@@ -29,26 +30,27 @@ public class CategoryController {
     }
 
     @PostMapping("/public/categories")
-    public ResponseEntity<String> createCategory(@Valid @RequestBody Category category)//@Valid ensures Requestbody contains valid data
-    {   categoryService.createCategory(category);
-        return new ResponseEntity<>("Category added successfully!!!", HttpStatus.CREATED);
+    public ResponseEntity<CategoryDTO> createCategory(@Valid @RequestBody CategoryDTO categoryDTO)//@Valid ensures Requestbody contains valid data
+    {
+        CategoryDTO savedCategoryDTO=categoryService.createCategory(categoryDTO);
+        return new ResponseEntity<>(savedCategoryDTO, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/admin/categories/{categoryId}")
-    public ResponseEntity deleteCategory(@PathVariable Long categoryId){
-            String status=categoryService.deleteCategory(categoryId);
+    public ResponseEntity<CategoryDTO> deleteCategory(@PathVariable Long categoryId){
+            CategoryDTO deletedCategoryDTO=categoryService.deleteCategory(categoryId);
             //3 ways to write
-            return new ResponseEntity<>(status, HttpStatus.OK);
-//            return ResponseEntity.ok(status);
-//            return ResponseEntity.status(ok).body(status);
+            return new ResponseEntity<>(deletedCategoryDTO, HttpStatus.OK);
+//            return ResponseEntity.ok(deletedCategoryDTO);
+//            return ResponseEntity.status(ok).body(deletedCategoryDTO);
     }
 
 //    @PutMapping("/api/admin/categories/{categoryId}") this or RequestMapping are equivalent
     @RequestMapping(value = "/admin/categories/{categoryId}",method = RequestMethod.PUT)
-    public ResponseEntity<String> updateCategory(@Valid @RequestBody Category category,
+    public ResponseEntity<CategoryDTO> updateCategory(@Valid @RequestBody CategoryDTO categoryDTO,
                                                  @PathVariable Long categoryId)
     {
-                Category savedCategory=categoryService.updateCategory(category,categoryId);
-                return new ResponseEntity<>("Category with category id "+categoryId+" is updated successfully!!", HttpStatus.OK);
+                CategoryDTO updatedCategoryDTO=categoryService.updateCategory(categoryDTO,categoryId);
+                return new ResponseEntity<>(updatedCategoryDTO, HttpStatus.OK);
     }
 }
