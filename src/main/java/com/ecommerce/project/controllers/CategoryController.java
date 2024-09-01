@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")//this part will be common in all endpoints
@@ -22,10 +21,21 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping("/public/categories")
-    public ResponseEntity<CategoryResponse> getAllCategories()
+    //Test endpoint for understanding how to use @RequestParan
+
+    @RequestMapping(value = "/public/echo",method = RequestMethod.GET)
+    public  ResponseEntity<String> echoMessage(@RequestParam(name="message", defaultValue = "Hello World!!!")String message )
     {
-        CategoryResponse categoryResponse =categoryService.getAllCategories();
+        return new ResponseEntity<>("Echoed Message: "+message,HttpStatus.OK);
+    }
+
+    @GetMapping("/public/categories")
+    public ResponseEntity<CategoryResponse> getAllCategories(
+            @RequestParam(name = "pageNumber")Integer pageNumber,
+            @RequestParam(name = "pageSize")Integer pageSize
+    )
+    {
+        CategoryResponse categoryResponse =categoryService.getAllCategories(pageNumber,pageSize);
         return new ResponseEntity<>(categoryResponse,HttpStatus.OK);
     }
 
@@ -41,9 +51,9 @@ public class CategoryController {
             CategoryDTO deletedCategoryDTO=categoryService.deleteCategory(categoryId);
             //3 ways to write
             return new ResponseEntity<>(deletedCategoryDTO, HttpStatus.OK);
-//            return ResponseEntity.ok(deletedCategoryDTO);
-//            return ResponseEntity.status(ok).body(deletedCategoryDTO);
+
     }
+
 
 //    @PutMapping("/api/admin/categories/{categoryId}") this or RequestMapping are equivalent
     @RequestMapping(value = "/admin/categories/{categoryId}",method = RequestMethod.PUT)
