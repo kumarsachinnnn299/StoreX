@@ -1,4 +1,4 @@
-package com.ecommerce.project.model.payload;
+package com.ecommerce.project.payload;
 //This is a request object
 
 import lombok.AllArgsConstructor;
