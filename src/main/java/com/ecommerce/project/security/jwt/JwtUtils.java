@@ -81,6 +81,14 @@ public class JwtUtils {
         return cookie;
     }
 
+    //This method is used for signout user
+    public ResponseCookie getCleanJwtCookie(){
+        ResponseCookie cookie=ResponseCookie.from(jwtCookie,null)
+                .path("/api")
+                .build();
+        return cookie;
+    }
+
     //This method is change for cookie . The one which we use when we dont implement cokkie, is insde the comment above
     public String generateTokenFromUserName(String userName)
     {
