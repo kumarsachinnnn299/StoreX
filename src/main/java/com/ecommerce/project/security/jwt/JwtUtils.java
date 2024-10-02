@@ -1,17 +1,21 @@
 package com.ecommerce.project.security.jwt;
 
+import com.ecommerce.project.security.services.UserDetailsImpl;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.WebUtils;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
@@ -26,6 +30,13 @@ public class JwtUtils {
     @Value("${spring.app.jwtExpirationMs}")
     private long jwtExpirationMs;
 
+    @Value("${spring.app.jwtCookieName}")
+    private String jwtCookie;
+
+    /*
+
+    This method is useful when we authenticate without Cookie
+
     public String getJwtFromHeader(HttpServletRequest request)
     {
         String bearerToken=request.getHeader("Authorization");
@@ -36,7 +47,7 @@ public class JwtUtils {
         return null;
     }
 
-    public String generateTokenFromUserName(UserDetails userDetails)
+     public String generateTokenFromUserName(UserDetails userDetails)
     {
         String userName=userDetails.getUsername();
         return Jwts.builder()
@@ -46,6 +57,42 @@ public class JwtUtils {
                 .signWith(key())
                 .compact();
     }
+
+    */
+
+    //This method to get Jwt from cookie
+    public String getJwtFromCookie(HttpServletRequest request)
+    {
+        Cookie cookie= WebUtils.getCookie(request,jwtCookie);
+        if(cookie!=null){
+            return cookie.getValue();
+        }else{
+            return null;
+        }
+    }
+
+
+    public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal){
+        String jwt=generateTokenFromUserName(userPrincipal.getUsername());
+        ResponseCookie cookie=ResponseCookie.from(jwtCookie,jwt).path("/api").maxAge(24*
+                60*60)
+                .httpOnly(false)//this will allow client side scripts to access the cookies
+                .build();
+        return cookie;
+    }
+
+    //This method is change for cookie . The one which we use when we dont implement cokkie, is insde the comment above
+    public String generateTokenFromUserName(String userName)
+    {
+
+        return Jwts.builder()
+                .subject(userName)
+                .issuedAt(new Date())
+                .expiration(new Date(new Date().getTime()+jwtExpirationMs))
+                .signWith(key())
+                .compact();
+    }
+
 
     public String getUserNameFromJwtToken(String token)
     {
