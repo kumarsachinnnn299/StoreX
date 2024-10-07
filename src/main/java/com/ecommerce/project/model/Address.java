@@ -45,9 +45,10 @@ public class Address {
     @Size(min = 6,message = "Pincode must be atleast 5 characters")
     private String pinCode;
 
-    @ToString.Exclude//to remove this list from the ToString method of Address class
-    @ManyToMany(mappedBy = "addresses")
-    private List<User>users=new ArrayList<>();
+//    @ToString.Exclude//to remove this list from the ToString method of Address class
+    @ManyToOne()
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public Address(String street, String buildingName, String cityName, String state, String country, String pinCode) {
         this.street = street;
