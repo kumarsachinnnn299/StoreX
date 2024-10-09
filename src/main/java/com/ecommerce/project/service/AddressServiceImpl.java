@@ -1,5 +1,6 @@
 package com.ecommerce.project.service;
 
+import com.ecommerce.project.exceptions.APIException;
 import com.ecommerce.project.exceptions.ResourceNotFoundException;
 import com.ecommerce.project.model.Address;
 import com.ecommerce.project.model.User;
@@ -40,6 +41,10 @@ public class AddressServiceImpl implements AddressService{
         List<Address>addresses=addressRepository.findAll();
         List<AddressDTO>addressDTOList=addresses.stream()
                 .map(address -> modelMapper.map(address,AddressDTO.class)).toList();
+        if(addressDTOList.isEmpty())
+        {
+            throw new APIException("No address is present!! Kindly add an address.");
+        }
         return  addressDTOList;
     }
 
@@ -55,6 +60,10 @@ public class AddressServiceImpl implements AddressService{
         List<Address>addresses=user.getAddresses();
         List<AddressDTO>addressDTOList=addresses.stream()
                 .map(address -> modelMapper.map(address,AddressDTO.class)).toList();
+        if(addressDTOList.isEmpty())
+        {
+            throw new APIException("No address is present!! Kindly add an address.");
+        }
         return  addressDTOList;
     }
 

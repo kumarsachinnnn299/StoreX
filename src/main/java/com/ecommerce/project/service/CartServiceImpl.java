@@ -10,12 +10,9 @@ import com.ecommerce.project.payload.ProductDTO;
 import com.ecommerce.project.repositories.CartItemRepository;
 import com.ecommerce.project.repositories.CartRepository;
 import com.ecommerce.project.repositories.ProductRepository;
-import com.ecommerce.project.security.response.MessageResponse;
 import com.ecommerce.project.util.AuthUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -118,16 +115,18 @@ public class CartServiceImpl implements CartService {
         {
             throw  new APIException("No Cart exists!!");
         }
-        List<CartDTO>cartDTOS=carts.stream().map(
-                cart->{
-                    CartDTO cartDTO=modelMapper.map(cart,CartDTO.class);
-                    List<ProductDTO>products=cart.getCartItems().stream()
-                            .map(p->modelMapper.map(p.getProduct(),ProductDTO.class))
-                                    .collect(Collectors.toList());
-                    cartDTO.setProducts(products);
-                    return cartDTO;
-                }
-        ).collect(Collectors.toList());
+        List<CartDTO>cartDTOS=carts.stream().map(cart->{
+
+            CartDTO cartDTO=modelMapper.map(cart,CartDTO.class);
+            List<ProductDTO>products=cart.getCartItems().stream().map(cartItem->{
+                ProductDTO productDTO=modelMapper.map(cartItem.getProduct(),ProductDTO.class);
+                productDTO.setQuantity(cartItem.getQuantity());//Set the quantity from cart item
+                return productDTO;
+            }).collect(Collectors.toList());
+            cartDTO.setProducts(products);
+            return cartDTO;
+
+        }).collect(Collectors.toList());
         return cartDTOS;
 
     }
@@ -230,6 +229,7 @@ public class CartServiceImpl implements CartService {
         }
         cart.setTotalPrice(cart.getTotalPrice()-(cartItem.getProductPrice()*cartItem.getQuantity()));
         cartItemRepository.deleteCartItemByProductIdAndCartId(cartId,productId);
+
         return "Product "+cartItem.getProduct().getProductName()+" removed from the cart!";
     }
 
