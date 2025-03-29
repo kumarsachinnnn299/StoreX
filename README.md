@@ -60,7 +60,7 @@ spring.datasource.password=your-password
 The application will be accessible at :
 ```http://localhost:8080.```
 
-### Access Swagger API documentation:
+### 4. Access Swagger API documentation:
 The swagger api documentation will be accessible at:
 ```
 http://localhost:8080/swagger-ui/index.html
