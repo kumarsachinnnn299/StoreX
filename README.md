@@ -23,16 +23,63 @@ StoreX is a robust and scalable e-commerce application built using **Spring Boot
 - **Validation**: Bean Validation API
 - **API Documentation**: Swagger (optional to add)
 
-## Project Setup 🛠️
+## Prerequisites
 
-### Prerequisites
+- **1. Java 11** or later
+- **2. Spring Boot 3.x**
+- **3. MySQL** for database
+- **4. Swagger** for API documentation
 
-- **Java 11** or later
-- **MySQL** (for local development, you can configure an online DB in `application.properties`)
-- **Docker** (for containerization)
+## Getting Started 🛠️
 
-### Clone the Repository
+
+
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/kumarsachinnnn299/StoreX.git
 cd StoreX
+```
+### 2. Configure MySQL
+- Set up an online MySQL database or configure it locally.
+
+- Update the application.properties file with the database credentials:
+
+```
+spring.datasource.url=jdbc:mysql://your-database-url:3306/storex
+spring.datasource.username=your-username
+spring.datasource.password=your-password
+```
+
+### 3. Run the Application 🚀
+
+
+```
+./mvnw spring-boot:run
+```
+The application will be accessible at :
+```http://localhost:8080.```
+
+### Access Swagger API documentation:
+The swagger api documentation will be accessible at:
+```
+http://localhost:8080/swagger-ui/index.html
+```
+
+
+## Project Structure
+- `controller`: Handles REST API endpoints.
+- `service`: Contains business logic.
+- `repository`: Handles database interactions.
+- `entity`: Contains entity classes for database tables.
+- `config`: Configurations for security, encryption, and application settings.
+
+## Future Enhancements
+
+1. Implement product reviews and ratings.
+2. Integrate payment gateways for handling real-time payments.
+3. Add promotional codes and discount functionalities.
+4. Enhance the front-end using ReactJS to build a complete user interface.
+
+## License
+This project is licensed under the MIT License.
