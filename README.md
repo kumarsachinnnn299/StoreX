@@ -2,6 +2,11 @@
 
 StoreX is a robust and scalable e-commerce application built using **Spring Boot**, designed to provide a seamless shopping experience for both customers and vendors. It manages core functionalities like product listings, order processing, user authentication, and cart management.
 
+## 🔗 Live Demo
+
+👉 [Access the Application](https://spring-boot-e-commerce-application.onrender.com/swagger-ui/index.html)\
+(Note: The application may take 2–3 minutes to start, as the clicking on the link initiates its deployment process again. It is not permanently deployed.) 
+
 ## Features ✨
 
 - **User Authentication & Authorization**: Secure authentication using **Spring Security** with **JWT tokens** and **cookie-based authentication**.
