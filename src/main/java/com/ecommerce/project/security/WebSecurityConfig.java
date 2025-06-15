@@ -102,7 +102,7 @@ public class WebSecurityConfig {
 
     I have commented it out because I have run it once and my data is saved since I am using MySQl and
     it will not be erased
-*/
+
     @Bean
     public CommandLineRunner initData(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
@@ -164,7 +164,7 @@ public class WebSecurityConfig {
         };
     }
 
-
+*/
 
 
 }
