@@ -96,6 +96,7 @@ public class WebSecurityConfig {
                 "/swagger-ui/",
                 "/webjars/**"));
     }
+
     /*
     This code is for initialising some user. It will run on the starting of the application.
     It is useful when we are using some db where data gets erased when we rerun the app: like H2 db
